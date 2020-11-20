@@ -97,7 +97,34 @@ function App() {
                         }}
                         className="kanban-column"                        
                       >
-                      
+                        {/* Create task cards */}
+                        {column.items.map((item, index) => {
+                          return (
+                            /* Draggable task card */
+                            <Draggable key={item.id} draggableId={item.id} index={index}>
+                              {(provided, snapshot) => {
+                                return (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    style={{
+                                      transition: 'all .5s',
+                                      /* Change task card color if isDragging */
+                                      backgroundColor: snapshot.isDragging ? '#263B4A' : '#456C86',
+                                      ...provided.draggableProps.style
+                                    }}
+                                    className="task-card"
+                                  >
+                                    {/* Task card const content */}
+                                    {item.content}
+                                  </div>
+                                );
+                              }}
+                            </Draggable>
+                          );
+                        })}
+                        {provided.placeholder}                      
                       </div>
                     );
                   }}
