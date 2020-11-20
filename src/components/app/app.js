@@ -72,21 +72,41 @@ const onDragEnd = (result, columns, setColumns) => {
 };
 
 function App() {
+  const [columns, setColumns] = useState(columnsFromBackend);
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="column-bg">
+      {/* DragDropContext from react-beautiful-dnd */}
+      <DragDropContext onDragEnd={result => onDragEnd(result, columns, setColumns)}>
+        {/* Create columns */}
+        {Object.entries(columns).map(([id, column]) => {
+          return (
+            <div className="set-column-direction">
+              <h2 className="white-font-color">{column.name}</h2>
+              <div className="margin-8px">
+                {/* Droppable column */}
+                <Droppable droppableId={id} key={id}>
+                  {(provided, snapshot) => {
+                    return (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}                        
+                        style = {{
+                          transition: 'all .5s',
+                          /* Change column color if a card isDraggingOver */
+                          background: snapshot.isDraggingOver ? 'lightsteelblue' : 'lightgrey'
+                        }}
+                        className="kanban-column"                        
+                      >
+                      
+                      </div>
+                    );
+                  }}
+                </Droppable>
+              </div>
+            </div>
+          );
+        })}
+      </DragDropContext>
     </div>
   );
 }
