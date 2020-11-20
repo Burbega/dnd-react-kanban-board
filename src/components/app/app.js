@@ -3,6 +3,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { v4 as uuid } from 'uuid';
 import './app.css';
 
+/* Task cards */
 const itemsFromBackend = [
   { id: uuid(), content: 'First Task' },
   { id: uuid(), content: 'Second Task' },
@@ -10,6 +11,7 @@ const itemsFromBackend = [
   { id: uuid(), content: 'Fourth Task' }
 ];
 
+/* Columns */
 const columnsFromBackend = {
   [uuid()]: {
     name: 'Requested',
@@ -29,9 +31,12 @@ const columnsFromBackend = {
   }
 };
 
+/* Drag and Drop handler */
 const onDragEnd = (result, columns, setColumns) => {
+  /* If Dropping outside of a column, return to the origin */
   if(!result.destination) return;
   const { source, destination } = result;
+  /* Dragging over different columns: Copy current Dragging task card, remove from origin and paste on new position */
   if (source.droppableId !== destination.droppableId) {
     const sourceColumn = columns[source.droppableId];
     const destColumn = columns[destination.droppableId];
@@ -51,6 +56,7 @@ const onDragEnd = (result, columns, setColumns) => {
       }
     })
   } else {
+    /* Dragging over the same column: Copy current Dragging task card position, remove from origin index and paste on new position index */
     const column = columns[source.droppableId];
     const copiedItems = [...column.items];
     const [removed] = copiedItems.splice(source.index, 1);
